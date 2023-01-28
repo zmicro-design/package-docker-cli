@@ -19,16 +19,19 @@ install() {
   local source_bin_file="./${name}-${PACKAGE_CORE_VERSION#v}-${platform}-${arch}/$name"
   # local target_bin_file="$usr_bin_dir/$name"
 
-  case $platform in 
-    darwin)
-      platform="mac"
-      ;;
+  case $platform in
+  darwin)
+    platform="mac"
+    ;;
   esac
 
   case $arch in
-    arm64)
-      arch="aarch64"
-      ;;
+  arm64)
+    arch="aarch64"
+    ;;
+  arm64)
+    arch="x86_64"
+    ;;
   esac
 
   # prepare context
@@ -40,7 +43,7 @@ install() {
   #   https://download.docker.com/linux/static/stable/aarch64/docker-20.10.9.tgz
   #   https://download.docker.com/mac/static/stable/x86_64/docker-20.10.9.tgz
   #   https://download.docker.com/mac/static/stable/aarch64/docker-20.10.9.tgz
-  #   
+  #
   # generate url
   local url="https://download.docker.com/${platform}/static/stable/${arch}/${name}-${PACKAGE_CORE_VERSION#v}.tgz"
   log::debug "[$(timestamp)][package][$name][$kernel][$arch] url: $url, file: ${tmp_file}, tmp_dir: $tmp_dir"
@@ -57,31 +60,31 @@ install() {
   log::info "[$(timestamp)][package][$name] installing ..."
   os::install $source_bin_file $usr_bin_dir $name
 
-# Complex like maven-mvnd
-#   # make executable
-#   log::info "[$(timestamp)][package][$name] making executable ..."
-#   chmod 755 $source_bin_file
+  # Complex like maven-mvnd
+  #   # make executable
+  #   log::info "[$(timestamp)][package][$name] making executable ..."
+  #   chmod 755 $source_bin_file
 
-#   # install
-#   if [ -d "$usr_lib_dir/${name}" ]; then
-#     log::info "[$(timestamp)][package][$name] removing old lib ..."
-#     sudo rm -rf $usr_lib_dir/${name}
-#   fi
-#   log::info "[$(timestamp)][package][$name] installing lib ..."
-#   sudo mv $lib_dir $usr_lib_dir/${name}
+  #   # install
+  #   if [ -d "$usr_lib_dir/${name}" ]; then
+  #     log::info "[$(timestamp)][package][$name] removing old lib ..."
+  #     sudo rm -rf $usr_lib_dir/${name}
+  #   fi
+  #   log::info "[$(timestamp)][package][$name] installing lib ..."
+  #   sudo mv $lib_dir $usr_lib_dir/${name}
 
-#   # install
-#   log::info "[$(timestamp)][package][$name] installing bin ..."
-#   sudo ln -sf $usr_lib_dir/${name}/bin/${PACKAGE_CORE_BIN_NAME} $usr_bin_dir/${PACKAGE_CORE_BIN_NAME}
+  #   # install
+  #   log::info "[$(timestamp)][package][$name] installing bin ..."
+  #   sudo ln -sf $usr_lib_dir/${name}/bin/${PACKAGE_CORE_BIN_NAME} $usr_bin_dir/${PACKAGE_CORE_BIN_NAME}
 
-#   # profile
-#   log::success "[$(timestamp)][package][$name] config MVND_HOME=$usr_lib_dir/${name} to global env file ..."
-#   local envs=$(
-#     cat <<-END
-# export MVND_HOME=$usr_lib_dir/${name}
-# END
-# )
-#   config::profile "# ZMICRO PACKAGE MAVEN-MVND" "$envs"
+  #   # profile
+  #   log::success "[$(timestamp)][package][$name] config MVND_HOME=$usr_lib_dir/${name} to global env file ..."
+  #   local envs=$(
+  #     cat <<-END
+  # export MVND_HOME=$usr_lib_dir/${name}
+  # END
+  # )
+  #   config::profile "# ZMICRO PACKAGE MAVEN-MVND" "$envs"
 
   # clean
   log::info "[$(timestamp)][package][$name] cleaning ..."
