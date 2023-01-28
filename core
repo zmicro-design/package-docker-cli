@@ -1,0 +1,94 @@
+#!/bin/bash
+
+install() {
+  # prepare vars
+  local name="$PACKAGE_CORE_NAME"
+
+  log::info "[$(timestamp)][package][$name] preparing ..."
+
+  # get system os/arch
+  local arch="$PACKAGE_OS_ARCH"
+  local kernel="$PACKAGE_OS_KERNEL"
+  local platform="$PACKAGE_OS_PLATFORM"
+  # usr_bin_dir
+  local usr_bin_dir="$PACKAGE_USER_BIN_DIR"
+  local tmp_dir="$PACKAGE_TMP_DIR"
+
+  # files
+  local tmp_file="$name.tgz"
+  local source_bin_file="./${name}-${PACKAGE_CORE_VERSION#v}-${platform}-${arch}/$name"
+  # local target_bin_file="$usr_bin_dir/$name"
+
+  case $platform in 
+    darwin)
+      platform="mac"
+      ;;
+  esac
+
+  case $arch in
+    arm64)
+      arch="aarch64"
+      ;;
+  esac
+
+  # prepare context
+  cd $tmp_dir
+
+  # reference: https://github.com/docker/cli/releases
+  # example:
+  #   https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz
+  #   https://download.docker.com/linux/static/stable/aarch64/docker-20.10.9.tgz
+  #   https://download.docker.com/mac/static/stable/x86_64/docker-20.10.9.tgz
+  #   https://download.docker.com/mac/static/stable/aarch64/docker-20.10.9.tgz
+  #   
+  # generate url
+  local url="https://download.docker.com/${platform}/static/stable/${arch}/${name}-${PACKAGE_CORE_VERSION#v}.tgz"
+  log::debug "[$(timestamp)][package][$name][$kernel][$arch] url: $url, file: ${tmp_file}, tmp_dir: $tmp_dir"
+
+  # download
+  log::info "[$(timestamp)][package][$name] downloading ..."
+  os::download $tmp_file $url
+
+  # extract
+  log::info "[$(timestamp)][package][$name] extracting ..."
+  os::extract $tmp_file
+
+  # install
+  log::info "[$(timestamp)][package][$name] installing ..."
+  os::install $source_bin_file $usr_bin_dir $name
+
+# Complex like maven-mvnd
+#   # make executable
+#   log::info "[$(timestamp)][package][$name] making executable ..."
+#   chmod 755 $source_bin_file
+
+#   # install
+#   if [ -d "$usr_lib_dir/${name}" ]; then
+#     log::info "[$(timestamp)][package][$name] removing old lib ..."
+#     sudo rm -rf $usr_lib_dir/${name}
+#   fi
+#   log::info "[$(timestamp)][package][$name] installing lib ..."
+#   sudo mv $lib_dir $usr_lib_dir/${name}
+
+#   # install
+#   log::info "[$(timestamp)][package][$name] installing bin ..."
+#   sudo ln -sf $usr_lib_dir/${name}/bin/${PACKAGE_CORE_BIN_NAME} $usr_bin_dir/${PACKAGE_CORE_BIN_NAME}
+
+#   # profile
+#   log::success "[$(timestamp)][package][$name] config MVND_HOME=$usr_lib_dir/${name} to global env file ..."
+#   local envs=$(
+#     cat <<-END
+# export MVND_HOME=$usr_lib_dir/${name}
+# END
+# )
+#   config::profile "# ZMICRO PACKAGE MAVEN-MVND" "$envs"
+
+  # clean
+  log::info "[$(timestamp)][package][$name] cleaning ..."
+  rm -rf $tmp_dir
+
+  # @TODO
+  # zmicro package install docker-buildx
+}
+
+export -f install
