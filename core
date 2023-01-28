@@ -29,7 +29,7 @@ install() {
   arm64)
     arch="aarch64"
     ;;
-  arm64)
+  amd64)
     arch="x86_64"
     ;;
   esac
