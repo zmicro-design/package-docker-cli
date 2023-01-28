@@ -86,14 +86,14 @@ install() {
   # )
   #   config::profile "# ZMICRO PACKAGE MAVEN-MVND" "$envs"
 
-  # clean
-  log::info "[$(timestamp)][package][$name] cleaning ..."
-  rm -rf $tmp_dir
-
   # @TODO only linux install buildx
   if [ "$(os::is_macos)" != "true" ]; then
     zmicro package install docker-buildx
   fi
+
+  # clean
+  log::info "[$(timestamp)][package][$name] cleaning ..."
+  rm -rf $tmp_dir
 }
 
 export -f install
