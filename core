@@ -16,7 +16,7 @@ install() {
 
   # files
   local tmp_file="$name.tgz"
-  local source_bin_file="./${name}-${PACKAGE_CORE_VERSION#v}-${platform}-${arch}/$name"
+  local source_bin_file="./docker/$name"
   # local target_bin_file="$usr_bin_dir/$name"
 
   case $platform in
