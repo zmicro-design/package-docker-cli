@@ -15,7 +15,7 @@ install() {
   local tmp_dir="$PACKAGE_TMP_DIR"
 
   # files
-  local tmp_file="$name.tgz"
+  local tmp_file="$name.tar.gz"
   local source_bin_file="./docker/$name"
   # local target_bin_file="$usr_bin_dir/$name"
 
