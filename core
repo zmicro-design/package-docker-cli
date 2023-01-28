@@ -90,8 +90,10 @@ install() {
   log::info "[$(timestamp)][package][$name] cleaning ..."
   rm -rf $tmp_dir
 
-  # @TODO
-  # zmicro package install docker-buildx
+  # @TODO only linux install buildx
+  if [ "$(os::is_macos)" != "true" ]; then
+    zmicro package install docker-buildx
+  fi
 }
 
 export -f install
