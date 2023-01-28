@@ -14,7 +14,7 @@ version() {
 
 core() {
   # context directory
-  local context="$ZMICRO_PACKAGES_DATA_PATH/docker"
+  local context="$ZMICRO_PACKAGES_DATA_PATH/docker-cli"
   if [ ! -d "$context" ]; then
     mkdir -p $context
   fi
